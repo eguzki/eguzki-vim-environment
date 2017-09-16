@@ -54,6 +54,12 @@
 "       > vim-gitgutter - https://github.com/airblade/vim-gitgutter
 "           shows a git diff in the 'gutter' (sign column)
 "
+"       > vim-go - https://github.com/fatih/vim-go
+"           Go (golang) support for Vim
+"
+"       > tagbar - https://github.com/majutsushi/tagbar
+"           displays tags in a window, ordered by scope
+"
 " "
 " "
 " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -104,9 +110,9 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set smartindent
 set autoindent
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 set showmatch
 set hls
 set incsearch
@@ -169,6 +175,8 @@ Plugin 'trevordmiller/nova-vim'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'mileszs/ack.vim'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'fatih/vim-go'
+Plugin 'majutsushi/tagbar'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -194,6 +202,7 @@ nnoremap <silent> <C-f> :Files<CR>
 """"""""""""""""""""""""""""""
 " => Syntastic
 """"""""""""""""""""""""""""""
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
@@ -233,11 +242,7 @@ function! RemoveTrailingSpaces()
     %s/\s\+$//e
 endfunction
 
-function! ConvertTabsToSpaces()
-    %retab
-endfunction
 function! CleanFile()
-    call ConvertTabsToSpaces()
     call RemoveTrailingSpaces()
 endfunction
 " Key binding \f to clean up file
@@ -259,3 +264,52 @@ nnoremap <Leader>/ :Ack!<Space>
 " search for a current visual selection
 " This solution uses the <C-r>= trick that allows you to enter a kind of second-level command-line, which allows you to enter any vimscript expression, which is then evaluated, and the result is stringified and pasted onto the (original, first-level) command-line where the cursor is.
 vnoremap <Leader>/ y:Ack! <C-r>=fnameescape(@")<CR><CR>
+
+""""""""""""""""""""""""""""""
+" => vim-go
+""""""""""""""""""""""""""""""
+let g:go_highlight_types = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
+let g:go_bin_path = expand("~/.gotools")
+let g:go_gotags_bin = expand("~/.gotools/gotags")
+let g:go_autodetect_gopath = 0
+let g:go_fmt_autosave = 1
+
+""""""""""""""""""""""""""""""
+" => tagbar
+""""""""""""""""""""""""""""""
+nmap <F4> :TagbarToggle<CR>
+let g:tagbar_type_go = {
+  \ 'ctagstype' : 'go',
+  \ 'kinds'     : [
+    \ 'p:package',
+    \ 'i:imports:1',
+    \ 'c:constants',
+    \ 'v:variables',
+    \ 't:types',
+    \ 'n:interfaces',
+    \ 'w:fields',
+    \ 'e:embedded',
+    \ 'm:methods',
+    \ 'r:constructor',
+    \ 'f:functions'
+  \ ],
+  \ 'sro' : '.',
+  \ 'kind2scope' : {
+    \ 't' : 'ctype',
+    \ 'n' : 'ntype'
+  \ },
+  \ 'scope2kind' : {
+    \ 'ctype' : 't',
+    \ 'ntype' : 'n'
+  \ },
+  \ 'ctagsbin'  : expand(g:go_gotags_bin),
+  \ 'ctagsargs' : '-sort -silent'
+\ }
