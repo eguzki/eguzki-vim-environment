@@ -7,7 +7,6 @@ eguzki-vim-environment
     "
     " Version: 1.6 - Nov 2020
     " "
-    " "
     " """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 [Check .vimrc](.vimrc)
