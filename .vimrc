@@ -26,11 +26,17 @@
 "           Makes it easy to work with surrounding text:
 "            info -> :help surround
 "
+"       > YouCompleteMe - https://github.com/Valloric/YouCompleteMe
+"           Autocomplete Python/Java/C/C++ code
+"
 "       > Syntastic - https://github.com/scrooloose/syntastic
 "           Syntastic is a syntax checking plugin that runs files through
 "           external syntax checkers and displays any resulting errors to the
 "           user
 "           info -> :help syntastic-checker-options
+"
+"       > A - https://github.com/vim-scripts/a.vim
+"           Alternate Files quickly (.c --> .h etc) ]
 "
 "       > fzf vim - https://github.com/junegunn/fzf.vim
 "           fzf is a general-purpose command-line fuzzy finder.
@@ -47,6 +53,12 @@
 "
 "       > nova-vim - https://github.com/trevordmiller/nova-vim
 "           Terminal mode color schemes
+"
+"       > vim-wakatime- https://github.com/wakatime/vim-wakatime
+"           automatic time tracking and metrics generated from your programming activity
+"
+"       > tagbar - https://github.com/majutsushi/tagbar
+"           displays tags in a window, ordered by scope
 "
 "       > ack - https://github.com/mileszs/ack.vim
 "           Run your favorite search tool from Vim, with an enhanced results list
@@ -74,6 +86,9 @@ set ignorecase
 " ignore case if search pattern is all lowercase,
 "                   "    case-sensitive otherwise
 set smartcase
+set tags+=$HOME/.vim/tags/stl
+set tags+=$HOME/.vim/tags/c
+"
 
 map <F2> :NERDTreeToggle<CR>
 
@@ -104,9 +119,10 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set smartindent
 set autoindent
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set cindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 set showmatch
 set hls
 set incsearch
@@ -159,6 +175,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'tpope/vim-surround'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
@@ -167,6 +184,7 @@ Plugin 'bling/vim-airline'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'wakatime/vim-wakatime'
+Plugin 'majutsushi/tagbar'
 Plugin 'mileszs/ack.vim'
 Plugin 'airblade/vim-gitgutter'
 
@@ -185,6 +203,36 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 colorscheme nova
+
+""""""""""""""""""""""""""""""
+" => YouCompleteMe
+""""""""""""""""""""""""""""""
+let g:ycm_autoclose_preview_window_after_completion=1
+nnoremap <F6> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+""""""""""""""""""""""""""""""
+" => TagList
+""""""""""""""""""""""""""""""
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+let Tlist_Use_Right_Window=1
+let Tlist_WinWidth=30
+let Tlist_Exit_OnlyWindow = 1
+map <F4> :TlistToggle<cr>
+
+" build tags of your own project with Ctrl-F12
+map <C-F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --language-force=C++ --exclude=tags .<CR>
+map <C-F11> :!ctags -R --fields=+iaS --extra=+q .<CR>
+
+""""""""""""""""""""""""""""""
+" => Command-T (needs to be compiled with ruby)
+""""""""""""""""""""""""""""""
+let g:CommandTMaxHeight = 25
+" Tab and C-i are linked to focus i don't know why...
+"let g:CommandTToggleFocusMap=['<Tab>']
+let g:CommandTToggleFocusMap=['<C-z>']
+let g:CommandTAcceptSelectionSplitMap=['<C-i>']
+set wildignore+=*.o,*.obj,.git,.hg,*.pyc
+noremap <leader>y :CommandTFlush<cr>
 
 """"""""""""""""""""""""""""""
 " => fzf
@@ -242,6 +290,11 @@ function! CleanFile()
 endfunction
 " Key binding \f to clean up file
 nmap <silent> <leader>f <Esc>:call CleanFile()<CR>
+
+""""""""""""""""""""""""""""""
+" => tagbar
+""""""""""""""""""""""""""""""
+nmap <F8> :TagbarToggle<CR>
 
 """"""""""""""""""""""""""""""
 " => Ack
