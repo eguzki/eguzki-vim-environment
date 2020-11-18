@@ -86,8 +86,6 @@ set ignorecase
 " ignore case if search pattern is all lowercase,
 "                   "    case-sensitive otherwise
 set smartcase
-set tags+=$HOME/.vim/tags/stl
-set tags+=$HOME/.vim/tags/c
 "
 
 map <F2> :NERDTreeToggle<CR>
@@ -209,19 +207,6 @@ colorscheme nova
 """"""""""""""""""""""""""""""
 let g:ycm_autoclose_preview_window_after_completion=1
 nnoremap <F6> :YcmCompleter GoToDefinitionElseDeclaration<CR>
-
-""""""""""""""""""""""""""""""
-" => TagList
-""""""""""""""""""""""""""""""
-let Tlist_Ctags_Cmd = "/usr/bin/ctags"
-let Tlist_Use_Right_Window=1
-let Tlist_WinWidth=30
-let Tlist_Exit_OnlyWindow = 1
-map <F4> :TlistToggle<cr>
-
-" build tags of your own project with Ctrl-F12
-map <C-F12> :!ctags -R --c++-kinds=+pl --fields=+iaS --extra=+q --language-force=C++ --exclude=tags .<CR>
-map <C-F11> :!ctags -R --fields=+iaS --extra=+q .<CR>
 
 """"""""""""""""""""""""""""""
 " => Command-T (needs to be compiled with ruby)
